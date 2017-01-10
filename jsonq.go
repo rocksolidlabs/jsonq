@@ -64,14 +64,11 @@ func intFromInterface(val interface{}) (int, error) {
 	case float64:
 		return int(val.(float64)), nil
 	case string:
-		ival, err := strconv.ParseFloat(val.(string), 64)
-		if err == nil {
-			return int(ival), nil
-		}
+		return strconv.Atoi(val.(string))
 	case int:
 		return val.(int), nil
 	case int32:
-		return val.(int), nil
+		return int(val.(int32)), nil
 	case *int:
 		return *val.(*int), nil
 	case *int32:
@@ -79,11 +76,9 @@ func intFromInterface(val interface{}) (int, error) {
 	case *float64:
 		return int(*val.(*float64)), nil
 	case *string:
-		ival, err := strconv.ParseFloat(*val.(*string), 64)
-		if err == nil {
-			return int(ival), nil
-		}
+		return strconv.Atoi(*val.(*string))
 	}
+
 	return 0, fmt.Errorf("Expected numeric value for Int, got \"%v\"\n", val)
 }
 

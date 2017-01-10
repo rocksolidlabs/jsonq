@@ -47,6 +47,7 @@ var TestMap = map[string]interface{}{
 	"optInteger":   nil,
 	"integer32":    i32Ptr(2),
 	"optInteger32": nil,
+	"stringInt":    sPtr("3"),
 	"string":       sPtr("Hello, test!"),
 	"optString":    nil,
 	"float":        fPtr(123.4),
@@ -219,6 +220,13 @@ func TestQueryWithOptionalInt(t *testing.T) {
 	if i32 != 2 {
 		t.Errorf("Expecting 2, got %v\n", i32)
 	}
+	tErr(t, err)
+
+	si, err := q.Int("stringInt")
+	if si != 3 {
+		t.Errorf("Expecting 3, got %v\n", si)
+	}
+	tErr(t, err)
 }
 
 func TestQueryWithOptionalString(t *testing.T) {
