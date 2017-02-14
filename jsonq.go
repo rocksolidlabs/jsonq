@@ -17,6 +17,9 @@ func stringFromInterface(val interface{}) (string, error) {
 	case string:
 		return val.(string), nil
 	case *string:
+		if val.(*string) == nil {
+			return "", nil
+		}
 		return *val.(*string), nil
 	}
 	return "", fmt.Errorf("Expected string value for String, got \"%v\"\n", val)
@@ -65,7 +68,7 @@ func intFromInterface(val interface{}) (int, error) {
 		return int(val.(float64)), nil
 	case string:
 		i, err := strconv.Atoi(val.(string))
-		if err != nil {
+		if err == nil {
 			return i, nil
 		}
 	case int:
@@ -80,7 +83,7 @@ func intFromInterface(val interface{}) (int, error) {
 		return int(*val.(*float64)), nil
 	case *string:
 		i, err := strconv.Atoi(*val.(*string))
-		if err != nil {
+		if err == nil {
 			return i, nil
 		}
 	}

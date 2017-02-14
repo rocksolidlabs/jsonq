@@ -42,20 +42,23 @@ const TestData = `{
 	"bool": true
 }`
 
+var nilStringPointer *string
+
 var TestMap = map[string]interface{}{
-	"integer":      iPtr(1),
-	"optInteger":   nil,
-	"integer32":    i32Ptr(2),
-	"optInteger32": nil,
-	"stringInt":    sPtr("3"),
-	"string":       sPtr("Hello, test!"),
-	"optString":    nil,
-	"float":        fPtr(123.4),
-	"optFloat":     nil,
-	"array":        aPtr([]interface{}{1, 2, 3}),
-	"optArray":     nil,
-	"object":       mPtr(map[string]interface{}{"hello": "there"}),
-	"optObject":    nil,
+	"integer":          iPtr(1),
+	"optInteger":       nil,
+	"integer32":        i32Ptr(2),
+	"optInteger32":     nil,
+	"stringInt":        sPtr("3"),
+	"string":           sPtr("Hello, test!"),
+	"optString":        nil,
+	"float":            fPtr(123.4),
+	"optFloat":         nil,
+	"array":            aPtr([]interface{}{1, 2, 3}),
+	"optArray":         nil,
+	"object":           mPtr(map[string]interface{}{"hello": "there"}),
+	"optObject":        nil,
+	"nilStringPointer": nilStringPointer,
 }
 
 func tErr(t *testing.T, err error) {
@@ -120,6 +123,7 @@ func TestQuery(t *testing.T) {
 	if sval != "Hello, world!" {
 		t.Errorf("Expecting \"Hello, World!\", got \"%v\"\n", sval)
 	}
+	tErr(t, err)
 
 	sval, err = q.String("subobj", "subsubobj", "array", "0")
 	if sval != "hello" {
@@ -242,6 +246,12 @@ func TestQueryWithOptionalString(t *testing.T) {
 		t.Error("Expecting an error, got nil")
 		tErr(t, errors.New("No error was returned"))
 	}
+
+	s, err = q.String("nilStringPointer")
+	if s != "" {
+		t.Errorf("Expecting %q, got %q\n", "", s)
+	}
+	tErr(t, err)
 }
 
 func TestQueryWithOptionalFloat(t *testing.T) {
