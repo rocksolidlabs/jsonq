@@ -19,6 +19,11 @@ func stringFromInterface(val interface{}) (string, error) {
 	switch val.(type) {
 	case string:
 		return val.(string), nil
+	case *string:
+		if val.(*string) == nil {
+			return "", nil
+		}
+		return *val.(*string), nil
 	}
 	return "", fmt.Errorf("Expected string value for String, got \"%v\"\n", val)
 }
@@ -28,6 +33,8 @@ func boolFromInterface(val interface{}) (bool, error) {
 	switch val.(type) {
 	case bool:
 		return val.(bool), nil
+	case *bool:
+		return *val.(*bool), nil
 	}
 	return false, fmt.Errorf("Expected boolean value for Bool, got \"%v\"\n", val)
 }
@@ -44,8 +51,20 @@ func floatFromInterface(val interface{}) (float64, error) {
 		if err == nil {
 			return fval, nil
 		}
+<<<<<<< HEAD
 	case json.Number:
 		return val.(json.Number).Float64()
+=======
+	case *float64:
+		return *val.(*float64), nil
+	case *int:
+		return float64(*val.(*int)), nil
+	case *string:
+		fval, err := strconv.ParseFloat(*val.(*string), 64)
+		if err == nil {
+			return fval, nil
+		}
+>>>>>>> 96ecd4eaebda67fdd9683a175a842e790dcaf79b
 	}
 	return 0.0, fmt.Errorf("Expected numeric value for Float, got \"%v\"\n", val)
 }
@@ -56,16 +75,33 @@ func intFromInterface(val interface{}) (int, error) {
 	case float64:
 		return int(val.(float64)), nil
 	case string:
-		ival, err := strconv.ParseFloat(val.(string), 64)
+		i, err := strconv.Atoi(val.(string))
 		if err == nil {
-			return int(ival), nil
+			return i, nil
 		}
 	case int:
 		return val.(int), nil
+<<<<<<< HEAD
 	case json.Number:
 		i, err := val.(json.Number).Int64()
 		return int(i), err
+=======
+	case int32:
+		return int(val.(int32)), nil
+	case *int:
+		return *val.(*int), nil
+	case *int32:
+		return int(*val.(*int32)), nil
+	case *float64:
+		return int(*val.(*float64)), nil
+	case *string:
+		i, err := strconv.Atoi(*val.(*string))
+		if err == nil {
+			return i, nil
+		}
+>>>>>>> 96ecd4eaebda67fdd9683a175a842e790dcaf79b
 	}
+
 	return 0, fmt.Errorf("Expected numeric value for Int, got \"%v\"\n", val)
 }
 
@@ -74,6 +110,8 @@ func objectFromInterface(val interface{}) (map[string]interface{}, error) {
 	switch val.(type) {
 	case map[string]interface{}:
 		return val.(map[string]interface{}), nil
+	case *map[string]interface{}:
+		return *val.(*map[string]interface{}), nil
 	}
 	return map[string]interface{}{}, fmt.Errorf("Expected json object for Object, got \"%v\"\n", val)
 }
@@ -83,6 +121,8 @@ func arrayFromInterface(val interface{}) ([]interface{}, error) {
 	switch val.(type) {
 	case []interface{}:
 		return val.([]interface{}), nil
+	case *[]interface{}:
+		return *val.(*[]interface{}), nil
 	}
 	return []interface{}{}, fmt.Errorf("Expected json array for Array, got \"%v\"\n", val)
 }

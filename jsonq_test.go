@@ -2,6 +2,7 @@ package jsonq
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 	"testing"
@@ -40,6 +41,25 @@ const TestData = `{
 	},
 	"bool": true
 }`
+
+var nilStringPointer *string
+
+var TestMap = map[string]interface{}{
+	"integer":          iPtr(1),
+	"optInteger":       nil,
+	"integer32":        i32Ptr(2),
+	"optInteger32":     nil,
+	"stringInt":        sPtr("3"),
+	"string":           sPtr("Hello, test!"),
+	"optString":        nil,
+	"float":            fPtr(123.4),
+	"optFloat":         nil,
+	"array":            aPtr([]interface{}{1, 2, 3}),
+	"optArray":         nil,
+	"object":           mPtr(map[string]interface{}{"hello": "there"}),
+	"optObject":        nil,
+	"nilStringPointer": nilStringPointer,
+}
 
 func tErr(t *testing.T, err error) {
 	if err != nil {
@@ -129,6 +149,7 @@ func TestQuery(t *testing.T) {
 	if sval != "Hello, world!" {
 		t.Errorf("Expecting \"Hello, World!\", got \"%v\"\n", sval)
 	}
+	tErr(t, err)
 
 	sval, err = q.String("subobj", "subsubobj", "array", "0")
 	if sval != "hello" {
@@ -220,4 +241,121 @@ func TestQuery(t *testing.T) {
 		t.Errorf("Expecting 1, got %v\n", aobjs[0]["obj1"])
 	}
 
+}
+
+func TestQueryWithOptionalInt(t *testing.T) {
+	q := NewQuery(TestMap)
+	i, err := q.Int("integer")
+	if i != 1 {
+		t.Errorf("Expecting 1, got %v\n", i)
+	}
+	tErr(t, err)
+
+	_, err = q.Int("optInteger")
+	if err == nil {
+		t.Error("Expecting an error, got nil")
+		tErr(t, errors.New("No error was returned"))
+	}
+
+	i32, err := q.Int("integer32")
+	if i32 != 2 {
+		t.Errorf("Expecting 2, got %v\n", i32)
+	}
+	tErr(t, err)
+
+	si, err := q.Int("stringInt")
+	if si != 3 {
+		t.Errorf("Expecting 3, got %v\n", si)
+	}
+	tErr(t, err)
+}
+
+func TestQueryWithOptionalString(t *testing.T) {
+	q := NewQuery(TestMap)
+	s, err := q.String("string")
+	if s != "Hello, test!" {
+		t.Errorf("Expecting %q, got %q\n", "Hello, test!", s)
+	}
+	tErr(t, err)
+
+	_, err = q.String("optString")
+	if err == nil {
+		t.Error("Expecting an error, got nil")
+		tErr(t, errors.New("No error was returned"))
+	}
+
+	s, err = q.String("nilStringPointer")
+	if s != "" {
+		t.Errorf("Expecting %q, got %q\n", "", s)
+	}
+	tErr(t, err)
+}
+
+func TestQueryWithOptionalFloat(t *testing.T) {
+	q := NewQuery(TestMap)
+	f, err := q.Float("float")
+	if f != 123.4 {
+		t.Errorf("Expecting 123.4, got %v\n", f)
+	}
+	tErr(t, err)
+
+	_, err = q.Float("optFloat")
+	if err == nil {
+		t.Error("Expecting an error, got nil")
+		tErr(t, errors.New("No error was returned"))
+	}
+}
+
+func TestQueryWithOptionalArray(t *testing.T) {
+	q := NewQuery(TestMap)
+	a, err := q.Array("array")
+	if len(a) != 3 {
+		t.Errorf("Expecting [1, 2, 3], got %v\n", a)
+	}
+	tErr(t, err)
+
+	_, err = q.Array("optArray")
+	if err == nil {
+		t.Error("Expecting an error, got nil")
+		tErr(t, errors.New("No error was returned"))
+	}
+}
+
+func TestQueryWithOptionalObject(t *testing.T) {
+	q := NewQuery(TestMap)
+	o, err := q.Object("object")
+	if o["hello"] != "there" {
+		t.Errorf("Expecting 'hello'->'there', got %v", o)
+	}
+	tErr(t, err)
+
+	_, err = q.Object("optObject")
+	if err == nil {
+		t.Error("Expecting an error, got nil")
+		tErr(t, errors.New("No error was returned"))
+	}
+}
+
+func iPtr(i int) *int {
+	return &i
+}
+
+func i32Ptr(i int32) *int32 {
+	return &i
+}
+
+func sPtr(s string) *string {
+	return &s
+}
+
+func fPtr(f float64) *float64 {
+	return &f
+}
+
+func mPtr(m map[string]interface{}) *map[string]interface{} {
+	return &m
+}
+
+func aPtr(a []interface{}) *[]interface{} {
+	return &a
 }
