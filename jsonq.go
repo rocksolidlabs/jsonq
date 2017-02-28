@@ -10,7 +10,7 @@ import (
 // JsonQuery is an object that enables querying of a Go map with a simple
 // positional query language.
 type JsonQuery struct {
-	blob                    map[string]interface{}
+	blob                    interface{}
 	SingleValuePanicOnError bool
 }
 
@@ -124,7 +124,7 @@ func arrayFromInterface(val interface{}) ([]interface{}, error) {
 // NewQuery creates a new JsonQuery obj from an interface{}.
 func NewQuery(data interface{}) *JsonQuery {
 	j := new(JsonQuery)
-	j.blob = data.(map[string]interface{})
+	j.blob = data
 	j.SingleValuePanicOnError = true
 	return j
 }
@@ -491,6 +491,7 @@ func rquery(blob interface{}, s ...string) (interface{}, error) {
 // an integer, the blob is treated as a json array ([]interface{}).  Any kind
 // of key or index error will result in a nil return value with an error set.
 func query(blob interface{}, query string) (interface{}, error) {
+	fmt.Println(query, blob)
 	index, err := strconv.Atoi(query)
 	// if it's an integer, then we treat the current interface as an array
 	if err == nil {

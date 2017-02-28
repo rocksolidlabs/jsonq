@@ -10,7 +10,7 @@ This package is meant to make working with complex feeds a bit more easy. If you
 # installing
 
 ```
-go get github.com/jmoiron/jsonq
+go get github.com/rocksolidlabs/jsonq
 ```
 
 # usage
