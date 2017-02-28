@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// JsonQuery is an object that enables querying of a Go map with a simple
+// JsonQuery is an object that enables querying of a Go interface with a simple
 // positional query language.
 type JsonQuery struct {
 	blob                    interface{}
