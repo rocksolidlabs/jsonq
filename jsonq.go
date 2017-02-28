@@ -51,10 +51,8 @@ func floatFromInterface(val interface{}) (float64, error) {
 		if err == nil {
 			return fval, nil
 		}
-<<<<<<< HEAD
 	case json.Number:
 		return val.(json.Number).Float64()
-=======
 	case *float64:
 		return *val.(*float64), nil
 	case *int:
@@ -64,7 +62,6 @@ func floatFromInterface(val interface{}) (float64, error) {
 		if err == nil {
 			return fval, nil
 		}
->>>>>>> 96ecd4eaebda67fdd9683a175a842e790dcaf79b
 	}
 	return 0.0, fmt.Errorf("Expected numeric value for Float, got \"%v\"\n", val)
 }
@@ -81,11 +78,9 @@ func intFromInterface(val interface{}) (int, error) {
 		}
 	case int:
 		return val.(int), nil
-<<<<<<< HEAD
 	case json.Number:
 		i, err := val.(json.Number).Int64()
 		return int(i), err
-=======
 	case int32:
 		return int(val.(int32)), nil
 	case *int:
@@ -99,7 +94,6 @@ func intFromInterface(val interface{}) (int, error) {
 		if err == nil {
 			return i, nil
 		}
->>>>>>> 96ecd4eaebda67fdd9683a175a842e790dcaf79b
 	}
 
 	return 0, fmt.Errorf("Expected numeric value for Int, got \"%v\"\n", val)
