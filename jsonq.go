@@ -1,6 +1,7 @@
 package jsonq
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -43,6 +44,8 @@ func floatFromInterface(val interface{}) (float64, error) {
 		if err == nil {
 			return fval, nil
 		}
+	case json.Number:
+		return val.(json.Number).Float64()
 	}
 	return 0.0, fmt.Errorf("Expected numeric value for Float, got \"%v\"\n", val)
 }
@@ -59,6 +62,9 @@ func intFromInterface(val interface{}) (int, error) {
 		}
 	case int:
 		return val.(int), nil
+	case json.Number:
+		i, err := val.(json.Number).Int64()
+		return int(i), err
 	}
 	return 0, fmt.Errorf("Expected numeric value for Int, got \"%v\"\n", val)
 }
