@@ -62,6 +62,8 @@ func floatFromInterface(val interface{}) (float64, error) {
 		if err == nil {
 			return fval, nil
 		}
+	case int64:
+		return float64(val.(int64)), nil
 	}
 	return 0.0, fmt.Errorf("Expected numeric value for Float, got \"%v\"\n", val)
 }
@@ -94,8 +96,9 @@ func intFromInterface(val interface{}) (int, error) {
 		if err == nil {
 			return i, nil
 		}
+	case int64:
+		return int(val.(int64)), nil
 	}
-
 	return 0, fmt.Errorf("Expected numeric value for Int, got \"%v\"\n", val)
 }
 
