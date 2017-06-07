@@ -494,7 +494,6 @@ func rquery(blob interface{}, s ...string) (interface{}, error) {
 // an integer, the blob is treated as a json array ([]interface{}).  Any kind
 // of key or index error will result in a nil return value with an error set.
 func query(blob interface{}, query string) (interface{}, error) {
-	fmt.Println(query, blob)
 	index, err := strconv.Atoi(query)
 	// if it's an integer, then we treat the current interface as an array
 	if err == nil {
