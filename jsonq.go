@@ -62,6 +62,10 @@ func floatFromInterface(val interface{}) (float64, error) {
 		if err == nil {
 			return fval, nil
 		}
+	case int64:
+		return float64(val.(int64)), nil
+	case uint64:
+		return float64(val.(uint64)), nil
 	}
 	return 0.0, fmt.Errorf("Expected numeric value for Float, got \"%v\"\n", val)
 }
@@ -94,8 +98,11 @@ func intFromInterface(val interface{}) (int, error) {
 		if err == nil {
 			return i, nil
 		}
+	case int64:
+		return int(val.(int64)), nil
+	case uint64:
+		return int(val.(uint64)), nil
 	}
-
 	return 0, fmt.Errorf("Expected numeric value for Int, got \"%v\"\n", val)
 }
 
@@ -491,7 +498,6 @@ func rquery(blob interface{}, s ...string) (interface{}, error) {
 // an integer, the blob is treated as a json array ([]interface{}).  Any kind
 // of key or index error will result in a nil return value with an error set.
 func query(blob interface{}, query string) (interface{}, error) {
-	fmt.Println(query, blob)
 	index, err := strconv.Atoi(query)
 	// if it's an integer, then we treat the current interface as an array
 	if err == nil {
